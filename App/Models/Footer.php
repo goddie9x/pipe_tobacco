@@ -1,7 +1,7 @@
 <?php
-namespace Models;
-class Brand extends Model{
-    protected $table = 'brand';
+namespace App\Models;
+class Footer extends Model{
+    protected $table = 'footer';
     public function getAll()
     {
        return $this->select('*')
