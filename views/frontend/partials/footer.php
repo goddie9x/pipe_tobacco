@@ -1,70 +1,67 @@
-<footer class="container">
-    <div class="row">
-        <div class="footer-logo col-6">
-            <img src="/assets/images/logo.png" alt="">
-        </div>
-        <div class="footer-contact col-6">
-            <div class="map">
-                <iframe
-                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3919.898410089898!2d106.680109314098!3d10.84501098989898!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x317529f8f8f8f8f7%3A0x8f8f8f8f8f8f8f8f!2zVHLGsOG7nW5nIMSQ4bqhaSBo4buNYyBI4buNYyA!5e0!3m2!1svi!2s!4v1559098180909!5m2!1svi!2s"
-                    width="100%" height="100%" frameborder="0" style="border:0" allowfullscreen></iframe>
+<footer class="container bg-secondary">
+    <div class="row pt-5 text-white bg-success">
+        <div class="footer-info d-flex col-8">
+            <div class="footer-logo col-md-4">
+                <img class="w-100 p-2" src="<?= url('public/images/' . @$site['site_logo']) ?>" alt="">
             </div>
-            <ul class="footer-social d-flex w-100 justify-content-between">
-                <li><a href="#">
+            <ul class="footer-info-text list-group list-group-flush col-md-8 ps-2">
+                <li class="list-group-item bg-success text-white">
+                    <?= @$site['site_description'] ?>
+                </li>
+                <li class="list-group-item bg-success text-white"><?= @$site['site_name'] ?></li>
+                <li class="list-group-item bg-success text-white"><a href="<?= @$site['site_address'] ?>"><?= @$site['site_address'] ?></a></li>
+                <li class="list-group-item bg-success text-white"><?= @$site['site_phone'] ?></li>
+                <li class="list-group-item bg-success text-white"><?= @$site['site_email'] ?></li>
+            </ul>
+        </div>
+        <div class="footer-contact col-4">
+            <div class="map">
+                <?= @$site['site_map'] ?>
+            </div>
+            <ul class=" footer-social mx-0 px-0 d-flex w-100 justify-content-around">
+                <li><a href="<?= @url($site['site_facebook']) ?>">
                         <i class="fab fa-facebook-f"></i>
                     </a></li>
-                <li><a href="#">
+                <li><a href="<?= @url($site['site_twitter']) ?>">
+                        <i class="fab fa-twitter"></i>
+                    </a></li>
+                <li><a href="<?= @url($site['site_youtube']) ?>">
                         <i class="fab fa-youtube"></i>
                     </a></li>
-                <li><a href="#">
-                        <i class="fab fa-zalo"></i>
-                    </a></li>
-                <li><a href="#">
-                        <i class="fas fa-envelope"></i>
-                    </a></li>
                 <li>
-                    <a href="#">
+                    <a href="mailto:<?= @$site['site_email'] ?>">
+                        <i class="fas fa-envelope"></i>
+                    </a>
+                </li>
+                <li>
+                    <a href="tel:<?= @$site['site_phone'] ?>">
                         <i class="fas fa-phone"></i>
                     </a>
                 </li>
             </ul>
         </div>
-        <div class="footer-menu col-12 d-flex">
-            <ul class="col-6 col-md-3">
-                <li><a href="#">Home</a></li>
-                <li><a href="#">About</a></li>
-                <li><a href="#">Contact</a></li>
-                <li><a href="#">Blog</a></li>
-                <li><a href="#">FAQ</a></li>
-            </ul>
-            <ul class="col-6 col-md-3">
-                <li><a href="#">Home</a></li>
-                <li><a href="#">About</a></li>
-                <li><a href="#">Contact</a></li>
-                <li><a href="#">Blog</a></li>
-                <li><a href="#">FAQ</a></li>
-            </ul>
-            <ul class="col-6 col-md-3">
-                <li><a href="#">Home</a></li>
-                <li><a href="#">About</a></li>
-                <li><a href="#">Contact</a></li>
-                <li><a href="#">Blog</a></li>
-                <li><a href="#">FAQ</a></li>
-            </ul>
-            <ul class="col-6 col-md-3">
-                <li><a href="#">Home</a></li>
-                <li><a href="#">About</a></li>
-                <li><a href="#">Contact</a></li>
-                <li><a href="#">Blog</a></li>
-                <li><a href="#">FAQ</a></li>
+    </div>
+    <div class="footer-menu col-12 d-flex">
+        <?php if(isset($footerNav) && count($footerNav) > 0):
+                foreach ($menus as $menu): ?>
+        <div class="footer-menu-item col-md-3">
+            <h5 class="text-white"><?= $menu['menu_name'] ?></h5>
+            <ul class="list-unstyled">
+                <?php foreach ($menu['sub_menus'] as $sub_menu): ?>
+                <li><a href="<?= url($sub_menu['sub_menu_url']) ?>"><?= $sub_menu['sub_menu_name'] ?></a></li>
+                <?php endforeach; ?>
             </ul>
         </div>
-        <div class="footer-copyright col-12">
-            <p>Copyright &copy; 2022 Pipe Tobacco</p>
-        </div>
+        <?php endforeach; 
+            endif; ?>
+    </div>
+    <div class="footer-copyright py-2 text-center">
+        <span class="text-white">Copyright &copy; <?= date('Y') ?> <?= @$site['site_name'] ?></span>
+    </div>
     </div>
 </footer>
-<script src="<?php echo url('public/assets/js/jquery-3.6.0.min.js');?>"></script>
-<script src="<?php echo url('public/assets/js/bootstrap.min.js');?>"></script>
-<script src="<?php echo url('public/assets/js/select2.min.js');?>"></script>
-<script src="<?php echo url('public/assets/js/index.js');?>"></script>
+<script src="<?= @url('public/assets/js/jquery-3.6.0.min.js') ?>"></script>
+<script src="<?= @url('public/assets/js/popper.min.js') ?>"></script>
+<script src="<?= @url('public/assets/js/bootstrap.min.js') ?>"></script>
+<script src="<?= @url('public/assets/js/select2.min.js') ?>"></script>
+<script src="<?= @url('public/assets/js/index.js') ?>"></script>

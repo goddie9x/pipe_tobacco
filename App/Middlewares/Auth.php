@@ -1,5 +1,6 @@
 <?php
 namespace App\Middlewares;
+use Core\Middleware;
 use App\Helper\JWT;
 use App\Models\User;
 use App\Helper\Session;
@@ -7,7 +8,7 @@ class Auth extends Middleware
 {
     public static function check()
     {
-        $token = Session::get('token');
+        $token = isset($_COOKIE['token']) ? $_COOKIE['token'] : Session::get('token');
         if(isset($token)){
             return JWT::decode($token, env('APP_KEY'));
         }

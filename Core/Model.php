@@ -1,9 +1,10 @@
 <?php
-namespace App\Models;
+namespace Core;
 class Model
 {
     protected $databaseName = 'pipe_tobacco';
     protected $table;
+    protected $data;
     protected $query = '';
     protected $connection;
     protected $primaryKey = 'id';
@@ -72,7 +73,26 @@ class Model
     }
     public function join($table, $on)
     {
-        $this->query .= ' JOIN ' . $table . ' ON ' . $on;
+        $this->query .= $this->table.' INNER JOIN ' . $table . ' ON ';
+        if(is_array($on)){
+            if(array_is_list($on)){
+                $onLength = count($on);
+                $i = 0;
+                foreach($on as $key => $value){
+                    $this->query .= $key . ' = ' . $value;
+                    if($i < $onLength - 1){
+                        $this->query .= ' AND ';
+                    }
+                    $i++;
+                }
+            }
+            else{
+                $this->query .= $on[0] . ' = ' . $on[1];
+            }
+        }
+        else{
+            $this->query .= $on;
+        }
         return $this;
     }
     public function orderBy($conditions)
@@ -120,6 +140,12 @@ class Model
     }
     public function first()
     {
+        if($this->query == ''){
+            $this->query = "SELECT * FROM {$this->table}";
+        }
+        if(!str_contains($this->query, 'SELECT')){
+            $this->query = "SELECT * FROM ".$this->query;
+        }
         try {
             $this->limit(1);
             $result = $this->get();
@@ -155,20 +181,69 @@ class Model
     }
     public function update($data)
     {
-        $this->query = 'UPDATE ' . $this->table . ' SET ';
-        $arrayDataLength = count($data);
-        for ($i = 0; $i < $arrayDataLength; $i++) {
-            $this->query .= $data[$i][0] . ' = ' . $data[$i][1];
-            if ($i < $arrayDataLength - 1) {
-                $this->query .= ' , ';
+        $this->query = str_replace('SELECT * FROM '.$this->table, '', $this->query);
+        $query = 'UPDATE ' . $this->table . ' SET ';
+        if(array_is_list($data)){
+            $i = 0;
+            foreach ($data as $key => $value) {
+                if (is_numeric($value)) {
+                    $value = $value;
+                } else {
+                    $value = "'$value'";
+                }
+                $query .= $key . ' = ' . $value . ' ';
+                if ($i < count($data) - 1) {
+                    $query .= ',';
+                }
+                $i++;
+            }
+        }else{
+            for ($i = 0; $i < count($data); $i++) {
+                $key = $data[$i][0];
+                $condition = $data[$i][1];
+                $value = $data[$i][2];
+                if (is_numeric($value)) {
+                    $value = $value;
+                } else {
+                    $value = "'$value'";
+                }
+                $query .= $key . ' ' . $condition . ' ';
+                if (is_array($data[$i][2])) {
+                    $query .= ' (' . implode(',', $data[$i][2]) . ') ';
+                }
+                else{
+                    $query .= $value . ' ';
+                }
+                if ($i < count($data) - 1) {
+                    $query .= ',';
+                }
             }
         }
-        return $this;
+        $this->query = $query . $this->query;
+        echoObject($this->query);
+        
+        try {
+            $stmt = $this->connection->prepare($this->query);
+            $stmt->execute();
+            echoObject($stmt);
+            return true;
+        } catch (\Exception $e) {
+            writeLog($e);
+            return false;
+        }
     }
     public function delete()
     {
-        $this->query = 'DELETE FROM ' . $this->table;
-        return $this;
+        $this->query = str_replace('SELECT *', 'DELETE', $this->query);
+        try{
+            $stmt = $this->connection->prepare($this->query);
+            $stmt->execute();
+            return true;
+        }
+        catch (\Exception $e) {
+            writeLog($e);
+            return false;
+        }
     }
     public function getQuery()
     {
@@ -200,15 +275,20 @@ class Model
         $model = new static();
         return call_user_func_array([$model, $name], $arguments);
     }
-    public function save($data)
+    
+    public function __set($name, $value)
     {
-        $this->query = 'UPDATE ' . $this->table . ' SET ';
-        $arrayDataLength = count($data);
-        for ($i = 0; $i < $arrayDataLength; $i++) {
-            $this->query .= $data[$i][0] . ' = ' . $data[$i][1];
-            if ($i < $arrayDataLength - 1) {
-                $this->query .= ' , ';
-            }
+        $this->data[$name] = $value;
+    }
+    public function save()
+    {
+        if (isset($this->data[$this->primaryKey])) {
+            $this->update($this->data);
+            $this->where([[$this->primaryKey, '=', $this->data[$this->primaryKey]]]);
+            $this->query .= ' LIMIT 1';
+            $this->connection->query($this->query);
+        } else {
+            $this->insert($this->data);
         }
         return $this;
     }

@@ -1,5 +1,5 @@
 <?php
-namespace App\Providers;
+namespace Core;
 class Provider{
     protected $app;
     public function __construct($app)

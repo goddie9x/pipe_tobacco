@@ -2,6 +2,7 @@
 namespace App\Helper;
 class Session{
     public static function set($key, $value){
+        
         $_SESSION[$key] = $value;
     }
     public static function get($key){
@@ -27,9 +28,6 @@ class Session{
     }
     public static function destroy(){
         session_destroy();
-    }
-    public static function put($key, $value){
-        $_SESSION[$key] = $value;
     }
     public static function forget($key){
         unset($_SESSION[$key]);

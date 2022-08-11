@@ -1,8 +1,9 @@
 <?php 
 namespace App\Controllers\Auth;
-use App\Controllers\Controller;
+use Core\Controller;
 use App\Models\User;
 use App\Middlewares\Auth;
+use App\Helper\Session;
 
 class RegisterController extends Controller
 {
@@ -37,21 +38,21 @@ class RegisterController extends Controller
             $errors['password_confirmation']= 'Password confirmation is not match';
         }
         if(count($errors) > 0) {
-            return redirect('auth.register', compact('errors'));
+            return redirect()->back(['errors'=>$errors]);
         }
         $user = (new User())->where([
             'account' => $account,
         ])->first();
         if($user) {
             $errors['account']= 'Account is exists';
-            return redirect('auth.register', compact('errors'));
+            return redirect()->back(['errors'=>$errors]);
         }
         $user = (new User())->where([
             'email' => $email
         ])->first();
         if($user) {
             $errors['email']= 'Email is exists';
-            return redirect('auth.register', compact('errors'));
+            return redirect()->back(['errors'=>$errors]);
         }
         $userId = User::insert([
             'account' => $account,
@@ -59,9 +60,13 @@ class RegisterController extends Controller
             'password' => password_hash($password, PASSWORD_DEFAULT),
             'user_name' => $user_name
         ]);
+        if(!$userId) {
+            $errors['register']= 'Register is failed';
+            return redirect()->back(['errors'=>$errors]);
+        }
         $token = createJWT($userId);
-        $_SESSION['token'] = $token;
+        Session::set('token', $token);
         $message = 'register success';
-        return view('/', compact('message'));
+        return redirect()->route('home',['message'=>$message]);
     }
 }

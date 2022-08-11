@@ -1,3 +1,4 @@
+<?php $errors = App\Helper\Session::take('errors');?>
 <div class="container login my-5">
     <div class="row justify-content-center">
         <div class="col-md-6 col-md-offset-3">
@@ -20,6 +21,12 @@
                             <?php if(isset($errors)&&isset($errors['password'])):?>
                                 <small class="form-text text-danger"><?php echo $errors['password'];?></small>
                             <?php endif;?>
+                        </div>
+                        <div class="form-group my-3">
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="remember" name="remember">
+                                <label class="form-check-label" for="remember">Remember me</label>
+                            </div>
                         </div>
                         <button type="submit" class="btn btn-primary">Sign in</button>
                     </form>

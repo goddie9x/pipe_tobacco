@@ -12,7 +12,7 @@ function view($view, $data = [])
             include_once $viewPartials;
         }
         else{
-            view('404');
+            view('errors/404');
         }
     } else {
         $viewPartials = './views/frontend/partials/main.php';
@@ -22,7 +22,7 @@ function view($view, $data = [])
             include_once $viewPartials;
         }
         else{
-            view('404');
+            view('errors/404');
         }
     }
 }
@@ -36,9 +36,9 @@ function url($path = '',$is_route=false)
 {
     if($is_route){
         global $listRoutePath;
-        return $listRoutePath[$path];
+        return url($listRoutePath[$path]);
     }
-    $url = '/' . env('APP_URL');
+    $url = '/' . env('APP_PATH');
     if ($path) {
         $url .= '/' . $path;
     }

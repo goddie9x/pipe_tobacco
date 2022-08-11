@@ -1,5 +1,6 @@
 <?php
 namespace App\Middlewares;
+use Core\Middleware;
 class AuthLogin extends Auth
 {
     public static $except = ['/pipe_tobacco/auth/logout'];

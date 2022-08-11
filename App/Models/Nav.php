@@ -1,25 +1,30 @@
 <?php
 namespace App\Models;
-class Nav extends Model{
+use Core\Model;
+class Nav extends Model
+{
     protected $table = 'nav';
-    public function getAll()
+    protected $primaryKey = 'nav_id';
+    public static function getAllAndMergeChildrentNavs()
     {
-        $listNav = $this->select('*')
+        $listNav = self::select('*')
             ->where(['status' => 1])
-            ->orderBy('nav_id ', 'asc')
             ->get();
-        $navs = [];
-        foreach ($listNav as $nav) {
-            $navs[$nav->nav_id] = $nav;
-        }
-        foreach ($navs as $nav) {
-            if($nav->parent_id){
-                if(isset($navs[$nav->parent_id])){
-                    $navs[$nav->parent_id]->children[] = $nav;
-                    unset($navs[$nav->nav_id]);
-                }
-            }
-        }
+        $navs = getChildren(0, $listNav);
         return $navs;
     }
+}
+
+function getChildren($parentId, &$listNav)
+{
+    $children = [];
+    foreach ($listNav as $key => $nav) {
+        if ($nav['parent_id'] == $parentId) {
+            $crrNav = $nav;
+            $crrNav['children'] = getChildren($nav['nav_id'],$listNav);
+            $children[] = $crrNav;
+            unset($listNav[$key]);
+        }
+    }
+    return $children;
 }

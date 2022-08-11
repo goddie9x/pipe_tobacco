@@ -1,3 +1,4 @@
+<?php $errors = App\Helper\Session::take('errors');?>
 <div class="container">
     <h1>Register</h1>
     <form action="<?php echo url('auth/register')?>" method="post">

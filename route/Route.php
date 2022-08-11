@@ -46,21 +46,25 @@ class Route
         global $listRoutePath;
         $params = [];
         $url = trim($url, '/');
-        if(strpos($url, '{') !== false){
-            $url = preg_replace_callback('/\{([^}]+)\}/', function($matches) use (&$params){
-                $params[] = $matches[1];
-                return '(.+)';
-            }, $url);
+        if (strpos($url, '{') !== false) {
+            $url = preg_replace_callback(
+                '/\{([^}]+)\}/',
+                function ($matches) use (&$params) {
+                    $params[] = $matches[1];
+                    return '(.+)';
+                },
+                $url,
+            );
         }
-        foreach($this->prefix as $prefix){
-            $url = $prefix.'/'.$url;
+        foreach ($this->prefix as $prefix) {
+            $url = $prefix . '/' . $url;
         }
         $url = trim($url, '/');
-        $url = ($url=='')?'/':$url;
+        $url = $url == '' ? '/' : $url;
         $this->routes[$method][] = [
             'url' => $url,
             'action' => $action,
-            'params' => $params
+            'params' => $params,
         ];
         $listRoutePath[$url] = $this->currentUrl;
         $this->currentUrl = $url;
@@ -81,10 +85,9 @@ class Route
             array_unshift($route->namespace, $arrayOptions['namespace']);
         }
         if (isset($arrayOptions['middleware'])) {
-            if(is_array($arrayOptions['middleware'])){
-                $route->middleware = array_merge($arrayOptions['middleware'],$route->middleware);
-            }
-            else{
+            if (is_array($arrayOptions['middleware'])) {
+                $route->middleware = array_merge($arrayOptions['middleware'], $route->middleware);
+            } else {
                 array_unshift($route->middleware, $arrayOptions['middleware']);
             }
         }
@@ -100,39 +103,39 @@ class Route
             array_unshift($this->namespace, $arrayOptions['namespace']);
         }
         if (isset($arrayOptions['middleware'])) {
-            if(is_array($arrayOptions['middleware'])){
-                $this->middleware = array_merge($arrayOptions['middleware'],$this->middleware);
-            }
-            else{
+            if (is_array($arrayOptions['middleware'])) {
+                $this->middleware = array_merge($arrayOptions['middleware'], $this->middleware);
+            } else {
                 array_unshift($this->middleware, $arrayOptions['middleware']);
             }
         }
         $callback($this);
         $this->run();
+        array_shift($this->prefix);
     }
     public function run()
     {
-        if(Route::$is_match) return;
+        if (Route::$is_match) {
+            return;
+        }
         $url = $this->getUrl();
         $method = $_SERVER['REQUEST_METHOD'];
         if (isset($this->routes[$method])) {
             $routeInfo = $this->routes[$method];
-            if (isset($routeInfo['params'])) {
-                foreach ($routeInfo as $route) {
-                    if (preg_match('#^' . $route['url'] . '$#', $url, $matches)) {
-                        $params = [];
-                        foreach ($route['params'] as $key => $value) {
-                            $params[$value] = $matches[$key + 1];
+            foreach ($routeInfo as $route) {
+                if ($route['url'] == $url) {
+                    Route::$is_match = true;
+                    return $this->runMiddlewares($route['action'], $this->getRequestData());
+                } else {
+                    $pattern = '#^' . $route['url'] . '$#';
+                    $matches = [];
+                    if (preg_match($pattern, $url, $matches)) {
+                        Route::$is_match = true;
+                        foreach ($matches as $key => $value) {
+                            if ($key > 0) {
+                                $_GET[$route['params'][$key - 1]] = $value;
+                            }
                         }
-                        $requestData = array_merge($this->getRequestData(), $params);
-                        Route::$is_match = true;
-                        return $this->runMiddlewares($route['action'], $requestData);
-                    }
-                }
-            } else {
-                foreach ($routeInfo as $route) {
-                    if ($route['url'] == $url) {
-                        Route::$is_match = true;
                         return $this->runMiddlewares($route['action'], $this->getRequestData());
                     }
                 }
@@ -142,13 +145,12 @@ class Route
     public function runMiddlewares($action, $requestData)
     {
         $middleware = array_shift($this->middleware);
-        if(!$middleware){
+        if (!$middleware) {
             return $this->getActionAndRun($action, $requestData);
-        }
-        else{
+        } else {
             $middleware = 'App\\Middlewares\\' . $middleware;
             $middleware = new $middleware();
-            $middleware->handle($action, $requestData,[$this,'runMiddlewares']);
+            $middleware->handle($action, $requestData, [$this, 'runMiddlewares']);
         }
     }
     public function getUrl()
@@ -158,17 +160,19 @@ class Route
         $url = str_replace($rootFolderName, '', $_SERVER['REQUEST_URI']);
         $url = str_replace('//', '', $url);
         $url = preg_replace('/\?.*/', '', $url);
-        if($url == '') $url = '/';
+        if ($url == '') {
+            $url = '/';
+        }
         return $url;
     }
     public function getRequestData()
     {
-        return (object)array_merge($_GET, $_POST, $_FILES, $_COOKIE, $_SERVER, $_REQUEST);
+        return (object) array_merge($_GET, $_POST, $_FILES, $_COOKIE, $_SERVER, $_REQUEST);
     }
     public static function notFound()
     {
-        if(!Route::$is_match){
-            view('404');
+        if (!Route::$is_match) {
+            view('errors/404');
         }
     }
     public function getActionAndRun($actionInfo, $requestData)
@@ -178,11 +182,12 @@ class Route
         $action = $actionInfo[1];
         $controllerPath = str_replace('\\', '/', $controllerPath);
         $controllerWithNamespace = $controllerPath;
-        foreach($this->namespace as $namespace){
-            $controllerWithNamespace = $namespace.'/'.$controllerWithNamespace;
+        foreach ($this->namespace as $namespace) {
+            $controllerWithNamespace = $namespace . '/' . $controllerWithNamespace;
         }
-        $controllerWithNamespace = 'App/Controllers/'.$controllerWithNamespace;
-        $controllerPath = './'. $controllerWithNamespace . '.php';
+        $controllerWithNamespace = 'App/Controllers/' . $controllerWithNamespace;
+
+        $controllerPath = './' . $controllerWithNamespace . '.php';
         if (file_exists($controllerPath)) {
             include_once $controllerPath;
             $controllerWithNamespace = str_replace('/', '\\', $controllerWithNamespace);

@@ -1,5 +1,5 @@
 <?php
-namespace App\Middlewares;
+namespace Core;
 class Middleware{
     public static $except = [];
     public static function handle($action, $requestData, $next){
