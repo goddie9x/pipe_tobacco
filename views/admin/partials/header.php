@@ -1,5 +1,5 @@
-<div class="container admin-header header bg-secondary p-1 rounded shadow">
-    <div class="row">
+<div class="container-fluid admin-header header bg-secondary p-1 rounded shadow">
+    <div class="row mx-0">
         <div class="col-md-1">
             <a href="<?=@url('admin')?>">
                 <img src="<?=@url('public/images/logo.png')?>" class="img-fluid" alt="">

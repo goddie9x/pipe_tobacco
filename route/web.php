@@ -35,11 +35,12 @@ Route::group(
             ],
             function ($route) {
                 $route->get('/', 'UserController@index')->name('users');
-                $route->get('/create', 'create')->name('users.create');
-                $route->post('/create', 'create')->name('users.create');
-                $route->get('/edit/{id}', 'edit')->name('users.edit');
-                $route->post('/edit/{id}', 'edit')->name('users.edit');
-                $route->get('/delete/{id}', 'delete')->name('users.delete');
+                $route->get('/create', 'UserController@create')->name('users.create');
+                $route->post('/create', 'UserController@create')->name('users.create');
+                $route->get('/edit/{id}', 'UserController@edit')->name('users.edit');
+                $route->post('/edit/{id}', 'UserController@update')->name('users.edit');
+                $route->get('/ban/{id}', 'UserController@ban')->name('users.band');
+                $route->get('/delete/{id}', 'UserController@delete')->name('users.delete');
             },
         );
         $route->subGroup(
@@ -79,7 +80,7 @@ Route::group(
                 $route->get('/edit/{id}', 'ProductController@edit')->name('edit_product');
                 $route->post('/update/{id}', 'ProductController@update')->name('edit_product');
                 $route->get('/delete/{id}', 'ProductController@delete')->name('delete_product');
-                $route->get('/{pageNumber}', 'ProductController@index')->name('products');
+                $route->get('/{pageNumber}', 'ProductController@index')->name('products_page');
             },
         );
         $route->subGroup(
@@ -102,9 +103,9 @@ Route::group(
             function ($route) {
                 $route->get('/', 'SlideController@index')->name('slides');
                 $route->get('/create', 'SlideController@create')->name('create_slide');
-                $route->post('/create', 'SlideController@create')->name('create_slide');
+                $route->post('/create', 'SlideController@store')->name('create_slide');
                 $route->get('/edit/{id}', 'SlideController@edit')->name('edit_slide');
-                $route->post('/edit/{id}', 'SlideController@edit')->name('edit_slide');
+                $route->post('/edit/{id}', 'SlideController@update')->name('edit_slide');
                 $route->get('/delete/{id}', 'SlideController@delete')->name('delete_slide');
             },
         );
@@ -178,7 +179,7 @@ Route::group(
             ],
             function ($route) {
                 $route->get('/', 'ProductController@index')->name('products');
-                $route->get('/{id}', 'ProductController@show')->name('show_product');
+                $route->get('/{slug}', 'ProductController@detail')->name('show_product');
             },
         );
         $route->subGroup(

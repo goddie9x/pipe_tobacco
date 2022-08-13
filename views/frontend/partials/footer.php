@@ -1,4 +1,4 @@
-<footer class="container bg-secondary">
+<footer class="container-fluid bg-secondary">
     <div class="row pt-5 text-white bg-success">
         <div class="footer-info d-flex col-8">
             <div class="footer-logo col-md-4">
@@ -64,4 +64,5 @@
 <script src="<?= @url('public/assets/js/popper.min.js') ?>"></script>
 <script src="<?= @url('public/assets/js/bootstrap.min.js') ?>"></script>
 <script src="<?= @url('public/assets/js/select2.min.js') ?>"></script>
+<script src="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.js"></script>
 <script src="<?= @url('public/assets/js/index.js') ?>"></script>

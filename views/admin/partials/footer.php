@@ -1,10 +1,8 @@
-<footer class="container">
+<footer class="container-fluid admin-footer bg-secondary rounded shadow">
     <div class="row">
         <div class="col-md-12">
-            <div class="footer-logo">
-                <img src="<?=url($site['site_logo'])?>" alt="">
-            </div>
             <div class="footer-copyright py-2 text-center">
+                <img src="<?=@url('public/images/logo.png')?>" class="img-fluid" alt="">
                 <span class="text-white">Copyright &copy; <?= date('Y') ?> <?= @$site['site_name'] ?></span>
             </div>
         </div>

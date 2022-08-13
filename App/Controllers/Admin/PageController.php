@@ -26,10 +26,10 @@ class PageController extends Controller
             $page_detail = new PageDetail();
             $page_detail->page_id = $page_id;
             $page_detail->page_title = $request->page_title;
-            $page_detail->page_keywords = $request->page_keywords;
+            $page_detail->page_keyword = $request->page_keyword;
             $page_detail->page_description = $request->page_description;
             $page_detail->page_content = $request->page_content;
-            $page_detail->status = $request->status;
+            $page_detail->page_status = $request->page_status;
             $file_name;
             if (isset($request->page_image)&&$request->page_image['name']!='') {
                 try {
@@ -65,18 +65,18 @@ class PageController extends Controller
     }
     public function update($request)
     {
-        $isUpdatedPage = (new Page())->where(['page_id' => $request->page_id])->update([
+        $UpdatedPage = (new Page())->where(['page_id' => $request->page_id])->update([
             'page_name' => $request->page_name,
             'nav_id' => $request->nav_id,
         ]);
         $PageDetailExit = PageDetail::getPageDetailByPageId($request->page_id);
-        $isUpdatedPageDetail;
+        $UpdatedPageDetail;
         $dataStore = [
             'page_title' => $request->page_title,
-            'page_keywords' => $request->page_keywords,
+            'page_keyword' => $request->page_keyword,
             'page_description' => $request->page_description,
             'page_content' => $request->page_content,
-            'status' => $request->status,
+            'page_status' => $request->page_status,
         ];
         if (isset($request->page_image)&&$request->page_image['name']!='') {
             try {
@@ -94,12 +94,15 @@ class PageController extends Controller
         }
         
         if (count($PageDetailExit) > 0) {
-            $isUpdatedPageDetail = (new PageDetail())->where(['page_id' => $request->page_id])->update($dataStore);
+            if(count($PageDetailExit)>0&&$PageDetailExit['page_image']!=''&&isset($request->page_image)&&$request->page_image['name']!=''){
+                unlink('public/images/pages/' . $PageDetailExit['page_image']);
+            }
+            $UpdatedPageDetail = (new PageDetail())->where(['page_id' => $request->page_id])->update($dataStore);
         } else {
             $dataStore['page_id'] = $request->page_id;
-            $isUpdatedPageDetail = (new PageDetail())->insert($dataStore);
+            $UpdatedPageDetail = (new PageDetail())->insert($dataStore);
         }
-        if ($isUpdatedPage && $isUpdatedPageDetail) {
+        if (is_numeric($UpdatedPage) && is_numeric($UpdatedPageDetail)) {
             return redirect()->to('admin/pages');
         } else {
             return redirect()->back(['errors' => 'Lỗi không thể lưu dữ liệu']);
@@ -107,6 +110,10 @@ class PageController extends Controller
     }
     public function delete($request)
     {
+        $pageDetail = PageDetail::getPageDetailByPageId($request->page_id);
+        if(count($pageDetail)>0&&$pageDetail['page_image']!=''){
+            unlink('public/images/pages/' . $pageDetail['page_image']);
+        }
         $isDeletedPage = (new Page())->where(['page_id' => $request->page_id])->delete();
         $isDeletedPageDetail = (new PageDetail())->where(['page_id' => $request->page_id])->delete();
         if ($isDeletedPage && $isDeletedPageDetail) {

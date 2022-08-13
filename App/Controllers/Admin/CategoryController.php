@@ -48,24 +48,33 @@ class CategoryController extends Controller
     }
     public function update($request)
     {
-        $dataUpdate = ['category_name' => $request->category_name, 'category_description' => $request->category_description, 'nav_id' => $request->nav_id, 'category_status' => $request->category_status];
-        if (isset($request->category_image) && $request->category_image['name'] != '') {
-            try {
-                $file = $request->category_image;
-                $file_name = $file['name'];
-                $file_tmp = $file['tmp_name'];
-                if (file_exists('public/images/products/' . $file_name)) {
-                    $file_name = date('Y-m-d-H-i-s') . '-' . $file_name;
+        $category = Category::find($request->id);
+        if (count($category) > 0) {
+            $dataUpdate = ['category_name' => $request->category_name, 'category_description' => $request->category_description, 'nav_id' => $request->nav_id, 'category_status' => $request->category_status];
+            if (isset($request->category_image) && $request->category_image['name'] != '') {
+                try {
+                    $category = Category::find($request->category_id);
+                    if (file_exists('public/images/products/' . $category['category_image'])) {
+                        unlink('public/images/products/' . $category['category_image']);
+                    }
+                    $file = $request->category_image;
+                    $file_name = $file['name'];
+                    $file_tmp = $file['tmp_name'];
+                    if (file_exists('public/images/products/' . $file_name)) {
+                        $file_name = date('Y-m-d-H-i-s') . '-' . $file_name;
+                    }
+                    move_uploaded_file($file_tmp, 'public/images/products/' . $file_name);
+                    $dataUpdate['category_image'] = $file_name;
+                } catch (\Exception $e) {
+                    writeLog($e);
                 }
-                move_uploaded_file($file_tmp, 'public/images/products/' . $file_name);
-                $dataUpdate['category_image'] = $file_name;
-            } catch (\Exception $e) {
-                writeLog($e);
             }
-        }
-        $idUpdated = (new Category())->where(['category_id' => $request->id])->update($dataUpdate);
-        if (is_numeric($idUpdated)) {
-            return redirect()->route('categories');
+            $idUpdated = (new Category())->where(['category_id' => $request->id])->update($dataUpdate);
+            if (is_numeric($idUpdated)) {
+                return redirect()->route('categories');
+            } else {
+                return redirect()->route('create_category');
+            }
         } else {
             return redirect()->route('create_category');
         }
@@ -73,7 +82,18 @@ class CategoryController extends Controller
     public function delete($request)
     {
         $category = Category::find($request->category_id);
-        $category->delete();
-        return redirect('admin/categories');
+        if(count($category) > 0){
+            if (file_exists('public/images/products/' . $category['category_image'])) {
+                unlink('public/images/products/' . $category['category_image']);
+            }
+            $isDeleted = Category::where(['category_id' => $request->category_id])->delete();
+            if($isDeleted){
+                return redirect()->route('categories', ['message' => 'Xóa thành công']);
+            }else{
+                return redirect()->route('categories', ['message' => 'Xóa không thành công']);
+            }
+        } else {
+            return redirect()->route('categories');
+        }
     }
 }

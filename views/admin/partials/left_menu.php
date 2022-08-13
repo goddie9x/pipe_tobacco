@@ -19,7 +19,7 @@
                     </a>
                 </li>
                 <li class="dropdown-item">
-                    <a  class="w-100 d-block" href="<?=@url('admin/users/add'); ?>">
+                    <a  class="w-100 d-block" href="<?=@url('admin/users/create'); ?>">
                         <i class="fa fa-plus"></i>
                         <span>Add</span>
                     </a>
@@ -39,7 +39,7 @@
                     </a>
                 </li>
                 <li class="dropdown-item">
-                    <a  class="w-100 d-block" href="<?=@url('admin/slides/add'); ?>">
+                    <a  class="w-100 d-block" href="<?=@url('admin/slides/create'); ?>">
                         <i class="fa fa-plus"></i>
                         <span>Add</span>
                     </a>
@@ -79,7 +79,7 @@
                     </a>
                 </li>
                 <li class="dropdown-item">
-                    <a  class="w-100 d-block" href="<?=@url('admin/categories/add'); ?>">
+                    <a  class="w-100 d-block" href="<?=@url('admin/categories/create'); ?>">
                         <i class="fa fa-plus"></i>
                         <span>Add</span>
                     </a>
@@ -99,7 +99,7 @@
                     </a>
                 </li>
                 <li class="dropdown-item">
-                    <a  class="w-100 d-block" href="<?=@url('admin/products/add'); ?>">
+                    <a  class="w-100 d-block" href="<?=@url('admin/products/create'); ?>">
                         <i class="fa fa-plus"></i>
                         <span>Add</span>
                     </a>
@@ -119,7 +119,7 @@
                     </a>
                 </li>
                 <li class="dropdown-item">
-                    <a  class="w-100 d-block" href="<?=@url('admin/orders/add'); ?>">
+                    <a  class="w-100 d-block" href="<?=@url('admin/orders/create'); ?>">
                         <i class="fa fa-plus"></i>
                         <span>Add</span>
                     </a>
@@ -139,7 +139,7 @@
                     </a>
                 </li>
                 <li class="dropdown-item">
-                    <a  class="w-100 d-block" href="<?=@url('admin/pages/add'); ?>">
+                    <a  class="w-100 d-block" href="<?=@url('admin/pages/create'); ?>">
                         <i class="fa fa-plus"></i>
                         <span>Add</span>
                     </a>

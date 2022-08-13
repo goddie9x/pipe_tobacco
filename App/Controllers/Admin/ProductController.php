@@ -27,6 +27,7 @@ class ProductController extends Controller
         $product->product_name = $request->product_name;
         $product->brand_id = $request->brand_id;
         $product->category_id = $request->category_id;
+        $product->product_path = str_slug($request->product_name);
         $product->hot = $request->hot;
         $product->weight = $request->weight;
         $product->unit_cost = $request->unit_cost;
@@ -49,10 +50,10 @@ class ProductController extends Controller
             }
         }
         if (isset($request->product_image_slide)) {
-            $listImage='';
+            $listImage = '';
             $amountImage = count($request->product_image_slide['name']);
             for ($i = 0; $i < $amountImage; $i++) {
-                try{
+                try {
                     $file = $request->product_image_slide;
                     $file_name = $file['name'][$i];
                     $file_tmp = $file['tmp_name'][$i];
@@ -60,26 +61,23 @@ class ProductController extends Controller
                         $file_name = date('Y-m-d-H-i-s') . '-' . $file_name;
                     }
                     move_uploaded_file($file_tmp, 'public/images/products/' . $file_name);
-                    if($listImage!=''){
-                        $listImage .= ','.$file_name;
-                    }
-                    else{
+                    if ($listImage != '') {
+                        $listImage .= ',' . $file_name;
+                    } else {
                         $listImage .= $file_name;
                     }
-                }
-                catch (\Exception $e) {
+                } catch (\Exception $e) {
                     writeLog($e);
                 }
             }
             $product->product_image_slide = $listImage;
         }
         $idSaved = $product->save();
-        if(is_numeric($idSaved)){
-            return redirect()->route('products',['message' => 'Thêm sản phẩm thành công']);
-        }
-        else{
+        if (is_numeric($idSaved)) {
+            return redirect()->route('products', ['message' => 'Thêm sản phẩm thành công']);
+        } else {
             return redirect()->back([
-                'errors' => 'Lỗi khi thêm sản phẩm'
+                'errors' => 'Lỗi khi thêm sản phẩm',
             ]);
         }
     }
@@ -92,72 +90,100 @@ class ProductController extends Controller
     }
     public function update($request)
     {
-        $dataUpdate = [
-            'product_name' => $request->product_name,
-            'brand_id' => $request->brand_id,
-            'category_id' => $request->category_id,
-            'hot' => $request->hot,
-            'weight' => $request->weight,
-            'unit_cost' => $request->unit_cost,
-            'product_title' => $request->product_title,
-            'product_description' => $request->product_description,
-            'product_status' => $request->product_status,
-            'product_content' => $request->product_content,
-        ];
-        if (isset($request->product_image) && $request->product_image['name'] != '') {
-            try {
-                $file = $request->product_image;
-                $file_name = $file['name'];
-                $file_tmp = $file['tmp_name'];
-                if (file_exists('public/images/products/' . $file_name)) {
-                    $file_name = date('Y-m-d-H-i-s') . '-' . $file_name;
-                }
-                move_uploaded_file($file_tmp, 'public/images/products/' . $file_name);
-            } catch (\Exception $e) {
-                writeLog($e);
-            }
-            $dataUpdate['product_image'] = $file_name;
-        }
-        if (isset($request->product_image_slide)&&count($request->product_image_slide['name'])>0) {
-            $listImage = '';
-            $amountImage = count($request->product_image_slide['name']);
-            for ($i = 0; $i < $amountImage; $i++) {
-                try{
-                    $file = $request->product_image_slide;
-                    $file_name = $file['name'][$i];
-                    $file_tmp = $file['tmp_name'][$i];
+        $product = Product::find($request->id);
+        if (count($product) > 0) {
+            $dataUpdate = [
+                'product_name' => $request->product_name,
+                'brand_id' => $request->brand_id,
+                'category_id' => $request->category_id,
+                'product_path' => str_slug($request->product_name),
+                'hot' => $request->hot,
+                'weight' => $request->weight,
+                'unit_cost' => $request->unit_cost,
+                'product_title' => $request->product_title,
+                'product_description' => $request->product_description,
+                'product_status' => $request->product_status,
+                'product_content' => $request->product_content,
+            ];
+            if (isset($request->product_image) && $request->product_image['name'] != '') {
+                try {
+                    $file = $request->product_image;
+                    $file_name = $file['name'];
+                    $file_tmp = $file['tmp_name'];
                     if (file_exists('public/images/products/' . $file_name)) {
                         $file_name = date('Y-m-d-H-i-s') . '-' . $file_name;
                     }
+                    if($product['product_image'] != ''){
+                        unlink('public/images/products/' . $product['product_image']);
+                    }
                     move_uploaded_file($file_tmp, 'public/images/products/' . $file_name);
-                    if($listImage!=''){
-                        $listImage .= ','.$file_name;
-                    }
-                    else{
-                        $listImage = $file_name;
-                    }
-                }
-                catch (\Exception $e) {
+                } catch (\Exception $e) {
                     writeLog($e);
                 }
+                $dataUpdate['product_image'] = $file_name;
             }
-            $dataUpdate['product_image_slide'] = $listImage;
+            if (isset($request->product_image_slide) && count($request->product_image_slide['name']) > 0) {
+                $listImage = '';
+                $amountImage = count($request->product_image_slide['name']);
+                for ($i = 0; $i < $amountImage; $i++) {
+                    try {
+                        $file = $request->product_image_slide;
+                        $file_name = $file['name'][$i];
+                        $file_tmp = $file['tmp_name'][$i];
+                        if (file_exists('public/images/products/' . $file_name)) {
+                            $file_name = date('Y-m-d-H-i-s') . '-' . $file_name;
+                        }
+                        move_uploaded_file($file_tmp, 'public/images/products/' . $file_name);
+                        if ($listImage != '') {
+                            $listImage .= ',' . $file_name;
+                        } else {
+                            $listImage = $file_name;
+                        }
+                    } catch (\Exception $e) {
+                        writeLog($e);
+                    }
+                }
+                if($product['product_image_slide'] != ''){
+                $listImage = explode(',', $product['product_image_slide']);
+                foreach ($listImage as $image) {
+                    unlink('public/images/products/' . $image);
+                }
+            }
+                $dataUpdate['product_image_slide'] = $listImage;
+            }
+            $idUpdated = (new Product())->where(['product_id' => $request->id])->update($dataUpdate);
+            if (is_numeric($idUpdated)) {
+                return redirect()->route('products', ['message' => 'Cập nhật thành công']);
+            } else {
+                return redirect()->back(['errors' => 'Cập nhật thất bại']);
+            }
         }
-        $idUpdated = (new Product())->where(['product_id'=> $request->id])->update($dataUpdate);
-        if (is_numeric($idUpdated)) {
-            return redirect()->route('products', ['message' => 'Cập nhật thành công']);
-        } else {
-            return redirect()->back(['errors' => 'Cập nhật thất bại']);
+        else{
+            return redirect()->back(['errors' => 'Sản phẩm không tồn tại']);
         }
     }
     public function delete($request)
     {
-        $isDeleted = (new Product())->where(['product_id'=> $request->id])->delete();
-        if($isDeleted){
-            return redirect()->route('products',['message' => 'Xóa sản phẩm thành công']);
+        $product = Product::find($request->id);
+        if (count($product) > 0) {
+            if($product['product_image'] != ''){
+                unlink('public/images/products/' . $product['product_image']);
+            }
+            if($product['product_image_slide'] != ''){
+                $listImage = explode(',', $product['product_image_slide']);
+                foreach ($listImage as $image) {
+                    unlink('public/images/products/' . $image);
+                }
+            }
+            $idDeleted = Product::where(['product_id' => $request->id])->delete();
+            if ($idDeleted) {
+                return redirect()->route('products', ['message' => 'Xóa sản phẩm thành công']);
+            } else {
+                return redirect()->back(['errors' => 'Xóa sản phẩm thất bại']);
+            }
         }
         else{
-            return redirect()->back(['errors' => 'Xóa sản phẩm thất bại']);
+            return redirect()->back(['errors' => 'Sản phẩm không tồn tại']);
         }
     }
 }

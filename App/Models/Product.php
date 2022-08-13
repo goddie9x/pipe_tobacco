@@ -9,7 +9,7 @@ class Product extends Model
     public static function getProductHotByPage($page=1, $limit = 8)
     {
         return self::select('*')
-            ->where(['product_hot' => 1])
+            ->where(['hot' => 1, 'product_status' => 1])
             ->orderBy('product_id', 'DESC')
             ->limit($limit)
             ->offset(($page - 1) * $limit)
@@ -18,6 +18,16 @@ class Product extends Model
     public static function getProductsByPage($page=1, $limit = 8)
     {
         return self::select('*')
+            ->where(['product_status' => 1])
+            ->orderBy('product_id', 'DESC')
+            ->limit($limit)
+            ->offset(($page - 1) * $limit)
+            ->get();
+    }
+    public static function getProductsByCategoryID($category_id, $page=1, $limit = 8)
+    {
+        return self::select('*')
+            ->where(['category_id' => $category_id, 'product_status' => 1])
             ->orderBy('product_id', 'DESC')
             ->limit($limit)
             ->offset(($page - 1) * $limit)
@@ -28,10 +38,25 @@ class Product extends Model
         return self::select('products.*')
             ->join('category', ['category.category_id', 'products.category_id'])
             ->join('nav', ['nav.category_id', 'category.category_id'])
-            ->where(['nav.nav_path' => $path])
+            ->where(['nav.nav_path' => $path, 'product_status' => 1])
             ->orderBy('product_id', 'DESC')
             ->limit($limit)
             ->offset(($page - 1) * $limit)
             ->get();
+    }
+    public static function getProductByBrand($brand_id, $page=1, $limit = 8)
+    {
+        return self::select('*')
+            ->where(['brand_id' => $brand_id, 'product_status' => 1])
+            ->orderBy('product_id', 'DESC')
+            ->limit($limit)
+            ->offset(($page - 1) * $limit)
+            ->get();
+    }
+    public static function getProductByPath($path)
+    {
+        return self::select('*')
+            ->where(['product_path' => $path, 'product_status' => 1])
+            ->first();
     }
 }

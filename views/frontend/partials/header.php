@@ -1,5 +1,5 @@
-<div class="text-white bg-secondary container header shadow rounded">
-    <div class="row">
+<div class="text-white bg-secondary container-fluid header shadow rounded">
+    <div class="row mx-0">
         <div class="col-md-12">
             <div class="d-flex justify-content-between align-items-center">
                 <div class="header-top col-md-10 d-flex justify-content-between align-items-center">
@@ -25,7 +25,14 @@
                     <?php else : ?>
                     <div class="header-top-right col-3">
                         <ul class=" d-flex justify-content-evenly align-items-center">
-                            <li class="hearder-nav-item"><a class="dropdown-toggle" href="<?=@url('account');?>" ><?=@$currenUser['user_name']?></a>
+                            <li class="hearder-nav-item">
+                                <a class="dropdown-toggle" href="<?=@url('account');?>" >
+                                    <?php if($currenUser['user_image']): ?>
+                                    <img width="50" height="50" src="<?=url('public/images/users/'.$currenUser['user_image'])?>" alt="<?=@$currenUser['user_name']?>"data-bs-toggle="tooltip" data-bs-placement="top" title="<?=@$currenUser['user_name']?>">
+                                    <?php else: ?>
+                                    <?=@$currenUser['user_name']?>
+                                    <?php endif; ?>
+                                </a>
                                 <ul class="dropdown-menu bg-secondary shadow rounded">
                                     <li><a href="<?=@url('account');?>">My Account</a></li>
                                     <li><a href="<?=@url('auth/logout');?>">Logout</a></li>

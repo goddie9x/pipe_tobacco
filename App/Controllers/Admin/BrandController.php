@@ -21,7 +21,7 @@ class BrandController extends Controller
         $brand->brand_description = $request->brand_description;
         $brand->brand_status = $request->brand_status;
         $filename;
-        if (isset($request->brand_image)&&$request->brand_image!='') {
+        if (isset($request->brand_image) && $request->brand_image != '') {
             try {
                 $file = $request->brand_image;
                 $file_name = $file['name'];
@@ -39,8 +39,7 @@ class BrandController extends Controller
         $idSaved = $brand->save();
         if (is_numeric($idSaved)) {
             return redirect()->route('brands');
-        }
-        else {
+        } else {
             return redirect()->route('create_brand');
         }
     }
@@ -51,27 +50,51 @@ class BrandController extends Controller
     }
     public function update($request)
     {
-        $dataUpdate = ['brand_name' => $request->brand_name, 'brand_description' => $request->brand_description, 'brand_status' => $request->brand_status];
-        if (isset($request->brand_image)&&$request->brand_image['name']!='') {
-            try {
-                $file = $request->brand_image;
-                $file_name = $file['name'];
-                $file_tmp = $file['tmp_name'];
-                if (file_exists('public/images/products/' . $file_name)) {
-                    $file_name = date('Y-m-d-H-i-s') . '-' . $file_name;
+        $brand = Brand::find($request->id);
+        if (count($brand) > 0) {
+            $dataUpdate = ['brand_name' => $request->brand_name, 'brand_description' => $request->brand_description, 'brand_status' => $request->brand_status];
+            if (isset($request->brand_image) && $request->brand_image['name'] != '') {
+                try {
+                    if (file_exists('public/images/products/' . $brand['brand_image'])) {
+                        unlink('public/images/products/' . $brand['brand_image']);
+                    }
+                    $file = $request->brand_image;
+                    $file_name = $file['name'];
+                    $file_tmp = $file['tmp_name'];
+                    if (file_exists('public/images/products/' . $file_name)) {
+                        $file_name = date('Y-m-d-H-i-s') . '-' . $file_name;
+                    }
+                    move_uploaded_file($file_tmp, 'public/images/products/' . $file_name);
+                    $dataUpdate['brand_image'] = $file_name;
+                } catch (\Exception $e) {
+                    writeLog($e);
                 }
-                move_uploaded_file($file_tmp, 'public/images/products/' . $file_name);
-                $dataUpdate['brand_image'] = $file_name;
-            } catch (\Exception $e) {
-                writeLog($e);
             }
-        }
-        $idUpdated = (new Brand)->where(['brand_id' => $request->id])->update($dataUpdate);
-        if (is_numeric($idUpdated)) {
+            $idUpdated = (new Brand())->where(['brand_id' => $request->id])->update($dataUpdate);
+            if (is_numeric($idUpdated)) {
+                return redirect()->route('brands');
+            } else {
+                return redirect()->route('brands/update/' . $request->brand_id);
+            }
+        } else {
             return redirect()->route('brands');
         }
-        else {
-            return redirect()->route('brands/update/'.$request->brand_id);
+    }
+    public function delete($request)
+    {
+        $brand = Brand::find($request->id);
+        if (count($brand) > 0) {
+            if (file_exists('public/images/products/' . $brand['brand_image'])) {
+                unlink('public/images/products/' . $brand['brand_image']);
+            }
+            $isDeleted = Brand::where(['brand_id' => $request->id])->delete();
+            if ($isDeleted) {
+                return redirect()->route('brands', ['messages' => 'Xóa thành công']);
+            } else {
+                return redirect()->route('brands', ['errors' => 'Xóa không thành công']);
+            }
+        } else {
+            return redirect()->route('brands', ['errors' => 'Thương hiệu không tồn tại']);
         }
     }
 }

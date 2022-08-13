@@ -28,7 +28,8 @@ class LoginController extends Controller
                 'errors' => $errors
             ]);
         }
-        $user = (new User)->where(['account'=> $request->account])->first();
+        $user = (new User)->where(['account'=> $request->account,'banned'=>0])->first();
+        echoObject($user);
         if($user){
             if(password_verify($request->password, $user['password'])){
                 $token = createJWT($user['user_id']);  

@@ -17,7 +17,7 @@
 
 <body>
     <?php include_once './views/admin/partials/header.php'; ?>
-    <div class="container">
+    <div class="container-fluid">
         <div class="row">
             <div class="col-md-4 col-sm-3 d-none d-sm-flex flex-column admin-left-menu">
                 <?php include_once './views/admin/partials/left_menu.php'; ?>

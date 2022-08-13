@@ -17,7 +17,7 @@ class Auth extends Middleware
     public static function user(){
         $user_id = self::check();
         if($user_id){
-            return User::find($user_id);
+            return (new User)->where(['user_id'=>$user_id,'banned'=>0])->first();
         }
         return null;
     }

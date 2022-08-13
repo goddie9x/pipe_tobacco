@@ -26,6 +26,12 @@
                         <?php endif; ?>>
                 </div>
                 <div class="form-group my-3">
+                    <label for="product_name">Product path</label>
+                    <input type="text" class="form-control" id="product_path"
+                        disabled <?php if(isset($product)): ?> value="<?= $product['product_path'] ?>"
+                        <?php endif; ?>>
+                </div>
+                <div class="form-group my-3">
                     <label for="brand_id">Brand</label>
                     <select class="form-control" id="brand_id" name="brand_id">
                         <option>-- Select Brand --</option>
@@ -94,7 +100,7 @@
                 <div class="preview-list-image row">
                     <?php if(isset($product)&&$product['product_image_slide']): $listImageSlide = explode(',', $product['product_image_slide']); ?>
                     <?php foreach($listImageSlide as $imageSlide): ?>
-                    <div class="col-md-6 col-12">
+                    <div class="my-2 col-md-6 col-12">
                         <img class="w-100" src="<?= url('public/images/products/' . $imageSlide) ?>" alt="">
                     </div>
                     <?php endforeach; ?>
@@ -125,8 +131,6 @@
             </div>
         </form>
     </div>
-</div>
-</div>
 </div>
 <script>
     window.onload = function() {
