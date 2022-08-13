@@ -11,7 +11,8 @@ class PageDetail extends Model{
     public function getFullPageDetailByPath($page_path)
     {
         return $this->join('page', ['page_detail.page_id', 'page.page_id'])
-            ->where(['page.page_path' => $page_path])
+            ->join('nav', ['page.nav_id', 'nav.nav_id'])
+            ->where(['nav.nav_path' => $page_path, 'page_detail.page_status' => 1])
             ->first();
     }
 }

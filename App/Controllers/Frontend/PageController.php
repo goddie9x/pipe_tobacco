@@ -11,7 +11,6 @@ class PageController extends Controller
             return view('errors/404');
         }
         else{
-            $page = $page->toArray();
             return view('frontend.pages.index', $page);
         }
     }

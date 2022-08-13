@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="<?=url('public/images/'.$site['site_favicon'])?>" type="image/x-icon">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Pipe Tobacco</title>
     <link rel="stylesheet" href="<?=@url('public/assets/css/all.min.css');?>">

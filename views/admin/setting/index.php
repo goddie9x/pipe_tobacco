@@ -9,8 +9,8 @@
             </div>
             <div class="card-body">
                 <div class="row">
-                    <form class="col-8 general-setting" action="<?=url('admin/settings/save')?>" method="post">
-                        <div class="form-group my-3" >
+                    <form class="col-8 general-setting" action="<?= url('admin/settings/save') ?>" method="post">
+                        <div class="form-group my-3">
                             <label for="site_name">Site Name</label>
                             <input type="text" class="form-control" id="site_name" name="site_name"
                                 value="<?= @$site['site_name'] ?>">
@@ -53,21 +53,25 @@
                     <div class="col-4 images-setting">
                         <form action="<?= url('admin/settings/save') ?>" method="post" enctype="multipart/form-data">
                             <div class="preview-logo">
-                                <img class="w-100" src="<?= url('public/images/' . @$site['site_logo']) ?>" alt="">
+                                <img class="w-100" src="<?= url('public/images/' . @$site['site_logo']) ?>"
+                                    alt="">
                             </div>
                             <div class="form-group my-3">
                                 <label for="logo">Logo</label>
-                                <input type="file" class="form-control" id="logo" name="site_logo" accept="image/*">
+                                <input type="file" class="form-control" id="logo" name="site_logo"
+                                    accept="image/*">
                             </div>
                             <button type="submit" name="submit-logo" class="btn btn-primary">Save</button>
                         </form>
                         <form action="<?= url('admin/settings/save') ?>" method="post" enctype="multipart/form-data">
                             <div class="preview-favicon">
-                                <img class="w-50" src="<?= url('public/images/' . @$site['site_favicon']) ?>" alt="">
+                                <img class="w-50" src="<?= url('public/images/' . @$site['site_favicon']) ?>"
+                                    alt="">
                             </div>
                             <div class="form-group my-3">
                                 <label for="favicon">Favicon</label>
-                                <input type="file" class="form-control" id="favicon" name="site_favicon" accept="image/*">
+                                <input type="file" class="form-control" id="favicon" name="site_favicon"
+                                    accept="image/*">
                             </div>
                             <button type="submit" name="submit-favicon" class="btn btn-primary">Save</button>
                         </form>
@@ -100,3 +104,19 @@
         </div>
     </div>
 </div>
+<script>
+    window.onload = function () {
+        CKEDITOR.editorConfig = function(config) {
+            config.image_previewText = '';
+        };
+        CKEDITOR.replace('site_description', {
+            filebrowserBrowseUrl: '<?= @url('admin/images-public') ?>',
+            filebrowserImageBrowseUrl: '<?= @url('admin/images-public') ?>',
+            filebrowserUploadUrl: '<?= @url('admin/upload') ?>',
+            filebrowserImageUploadUrl: '<?= @url('admin/upload') ?>',
+            config: {
+                image_previewText: ''
+            }
+        });
+    }
+</script>

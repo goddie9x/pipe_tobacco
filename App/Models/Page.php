@@ -7,10 +7,11 @@ class Page extends Model
     protected $primaryKey = 'page_id';
     public static function getAllPages()
     {
-        return self::select('*')->get();
+        return self::select('page_id,page_name,nav.nav_path as page_path')
+        ->join('nav', 'page.nav_id = nav.nav_id')->get();
     }
     public static function getPageByPath($page_path)
     {
-        return self::select('*')->where(['page_path' => $page_path])->first();
+        return self::select('*')->join('nav', 'page.nav_id = nav.nav_id')->where(['page.page_path' => $page_path])->first();
     }
 }

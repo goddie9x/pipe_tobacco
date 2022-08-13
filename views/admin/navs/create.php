@@ -1,4 +1,9 @@
 <div class="create-nav">
+    <?php if (isset($error)): ?>
+        <div class="alert alert-danger">
+            <?=$error; ?>
+        </div>
+    <?php endif; ?>
     <form action="<?= isset($nav)?url('admin/settings/navs/edit/'.$nav['nav_id']):url('admin/settings/navs/save')?>" method="post">
         <div class="form-group my-3">
             <label for="title">Title</label>

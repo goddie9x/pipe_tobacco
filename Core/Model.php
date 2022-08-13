@@ -73,7 +73,13 @@ class Model
     }
     public function join($table, $on)
     {
-        $this->query .= $this->table.' INNER JOIN ' . $table . ' ON ';
+        $this->query = str_replace('FROM '.$this->table, 'FROM ', $this->query);
+        if(str_contains($this->query, 'JOIN')){
+            $this->query .= ' INNER JOIN ' . $table . ' ON ';
+        }
+        else{
+            $this->query .= $this->table.' INNER JOIN ' . $table . ' ON ';
+        }
         if(is_array($on)){
             if(array_is_list($on)){
                 $onLength = count($on);
@@ -91,7 +97,7 @@ class Model
             }
         }
         else{
-            $this->query .= $on;
+            $this->query .= $on.' ';
         }
         return $this;
     }
@@ -173,7 +179,7 @@ class Model
             $model->query = "INSERT INTO {$model->table} ($columns) VALUES ($values)";
             $stmt = $model->connection->prepare($model->query);
             $stmt->execute();
-            return $model->connection->lastInsertId();
+            return $model->connection->lastInsertId($model->primaryKey);
         } catch (\Exception $e) {
             writeLog($e);
             return null;
@@ -220,13 +226,10 @@ class Model
             }
         }
         $this->query = $query . $this->query;
-        echoObject($this->query);
-        
         try {
             $stmt = $this->connection->prepare($this->query);
             $stmt->execute();
-            echoObject($stmt);
-            return true;
+            return $this->connection->lastInsertId($this->primaryKey);
         } catch (\Exception $e) {
             writeLog($e);
             return false;
@@ -283,13 +286,19 @@ class Model
     public function save()
     {
         if (isset($this->data[$this->primaryKey])) {
-            $this->update($this->data);
-            $this->where([[$this->primaryKey, '=', $this->data[$this->primaryKey]]]);
-            $this->query .= ' LIMIT 1';
-            $this->connection->query($this->query);
+            return $this->update($this->data);
         } else {
-            $this->insert($this->data);
+            return $this->insert($this->data);
         }
-        return $this;
+    }
+    public static function count($options = [])
+    {
+        $model = new static();
+        $model->query = "SELECT COUNT(*) as total FROM {$model->table}";
+        if (count($options) > 0) {
+            $model->where($options);
+        }
+        $result = $model->get();
+        return $result[0]['total'];
     }
 }

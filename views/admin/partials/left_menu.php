@@ -28,6 +28,46 @@
         </li>
         <li class="my-0">
             <button class="w-100 dropdown-toggle btn btn-secondary rounded-0 btn-lg  shadow p-3 d-block" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="fa fa-image"></i>
+                <span>Slide</span>
+            </button>
+            <ul class="dropdown-menu">
+                <li class="dropdown-item">
+                    <a  class="w-100 d-block" href="<?=@url('admin/slides'); ?>">
+                        <i class="fa fa-list"></i>
+                        <span>List</span>
+                    </a>
+                </li>
+                <li class="dropdown-item">
+                    <a  class="w-100 d-block" href="<?=@url('admin/slides/add'); ?>">
+                        <i class="fa fa-plus"></i>
+                        <span>Add</span>
+                    </a>
+                </li>
+            </ul>
+        </li>
+        <li class="my-0">
+            <button class="w-100 dropdown-toggle btn btn-secondary rounded-0 btn-lg  shadow p-3 d-block" data-bs-toggle="dropdown" aria-expanded="false">
+                <span>Brand</span>
+                <i class="fa fa-image"></i>
+            </button>
+            <ul class="dropdown-menu">
+                <li class="dropdown-item">
+                    <a  class="w-100 d-block" href="<?=@url('admin/brands'); ?>">
+                        <i class="fa fa-list"></i>
+                        <span>List</span>
+                    </a>
+                </li>
+                <li class="dropdown-item">
+                    <a  class="w-100 d-block" href="<?=@url('admin/brands/create'); ?>">
+                        <i class="fa fa-plus"></i>
+                        <span>Add</span>
+                    </a>
+                </li>
+            </ul>
+        </li>
+        <li class="my-0">
+            <button class="w-100 dropdown-toggle btn btn-secondary rounded-0 btn-lg  shadow p-3 d-block" data-bs-toggle="dropdown" aria-expanded="false">
                 <i class="fa fa-list"></i>
                 <span>Categories</span>
             </button>
