@@ -32,7 +32,7 @@
             </div>
         </div>
         <div class="col-4">
-            <div class="preview-logo my-3">
+            <div class="preview-logo image-lg my-3">
                 <img class="w-100"
                     src="<?= isset($category) ? url('public/images/products/') . $category['category_image'] : '' ?>"
                     alt="">

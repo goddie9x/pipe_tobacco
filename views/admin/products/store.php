@@ -27,9 +27,8 @@
                 </div>
                 <div class="form-group my-3">
                     <label for="product_name">Product path</label>
-                    <input type="text" class="form-control" id="product_path"
-                        disabled <?php if(isset($product)): ?> value="<?= $product['product_path'] ?>"
-                        <?php endif; ?>>
+                    <input type="text" class="form-control" id="product_path" disabled <?php if(isset($product)): ?>
+                        value="<?= $product['product_path'] ?>" <?php endif; ?>>
                 </div>
                 <div class="form-group my-3">
                     <label for="brand_id">Brand</label>
@@ -74,22 +73,28 @@
                         <?php endif; ?>>
                 </div>
                 <div class="form-group my-3">
-                    <label for="product_title">Product Title</label>
-                    <input type="text" class="form-control" id="product_title" name="product_title"
-                        placeholder="Enter Product Title" <?php if(isset($product)): ?> value="<?= $product['product_title'] ?>"
+                    <label for="discount">Discount</label>
+                    <input type="number" class="form-control" id="discount" name="discount"
+                        placeholder="Enter Unit Price" <?php if(isset($product)): ?> value="<?= $product['discount'] ?>"
                         <?php endif; ?>>
-                </div>
-                <div class="form-group my-3">
-                    <label for="product_description">Product Description</label>
-                    <textarea class="form-control" id="product_description" name="product_description" rows="3"><?php if(isset($product)): ?><?= $product['product_description'] ?><?php endif; ?></textarea>
-                </div>
-                <div class="form-group my-3">
-                    <label for="product_content">Product Content</label>
-                    <textarea class="form-control" id="product_content" name="product_content" rows="3"><?php if(isset($product)): ?><?= $product['product_content'] ?><?php endif; ?></textarea>
+                    <div class="form-group my-3">
+                        <label for="product_title">Product Title</label>
+                        <input type="text" class="form-control" id="product_title" name="product_title"
+                            placeholder="Enter Product Title" <?php if(isset($product)): ?>
+                            value="<?= $product['product_title'] ?>" <?php endif; ?>>
+                    </div>
+                    <div class="form-group my-3">
+                        <label for="product_description">Product Description</label>
+                        <textarea class="form-control" id="product_description" name="product_description" rows="3"><?php if(isset($product)): ?><?= $product['product_description'] ?><?php endif; ?></textarea>
+                    </div>
+                    <div class="form-group my-3">
+                        <label for="product_content">Product Content</label>
+                        <textarea class="form-control" id="product_content" name="product_content" rows="3"><?php if(isset($product)): ?><?= $product['product_content'] ?><?php endif; ?></textarea>
+                    </div>
                 </div>
             </div>
             <div class="col-4">
-                <div class="preview-logo">
+                <div class="preview-logo image-lg">
                     <img class="w-100" src="<?= url('public/images/products/' . @$product['product_image']) ?>"
                         alt="">
                 </div>

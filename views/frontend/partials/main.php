@@ -16,7 +16,7 @@
 
 <body>
     <?php include_once './views/frontend/partials/header.php'; ?>
-    <div class="min-vh-100">
+    <div class="min-vh-100 my-3">
         <?php isset($view) ? include_once $view : include_once './views/404.php'; ?>
     </div>
     <?php include_once './views/frontend/partials/footer.php'; ?>

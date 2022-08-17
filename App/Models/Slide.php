@@ -8,6 +8,6 @@ class Slide extends Model
     protected $primaryKey = 'slide_id';
 
     public static function getSlidesByPage($page){
-        return self::select('*')->where('for_page', $page)->get();
+        return self::select('*')->where(['for_page'=> $page])->get();
     }
 }

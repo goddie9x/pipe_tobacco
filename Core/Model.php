@@ -71,15 +71,65 @@ class Model
         }
         return $this;
     }
+    public function orWhere($arrayWhere)
+    {
+        if ($this->query == '') {
+            $this->query = "SELECT * FROM {$this->table} ";
+        }
+        $this->query .= ' OR ';
+        $arrayWhereLength = count($arrayWhere);
+        //for type of array list like [key => value] means key = value or key in value(array)
+        if (array_is_list($arrayWhere)) {
+            $i = 0;
+            foreach ($arrayWhere as $key => $value) {
+                if (is_array($value)) {
+                    $this->query .= $key . ' IN (' . implode(',', $value) . ')';
+                } else {
+                    if (is_numeric($value)) {
+                        $value = $value;
+                    } else {
+                        $value = "'$value'";
+                    }
+                    $this->query .= $key . ' = ' . $value . ' ';
+                }
+                if ($i < $arrayWhereLength - 1) {
+                    $this->query .= ' OR ';
+                }
+                $i++;
+            }
+        } else {
+            for ($i = 0; $i < $arrayWhereLength; $i++) {
+                $key = $arrayWhere[$i][0];
+                $condition = $arrayWhere[$i][1];
+                $value = $arrayWhere[$i][2];
+                if (is_numeric($value)) {
+                    $value = $value;
+                } else {
+                    $value = "'$value'";
+                }
+                $this->query .= $key . ' ' . $condition . ' ';
+                if (is_array($arrayWhere[$i][2])) {
+                    $this->query .= ' (' . implode(',', $arrayWhere[$i][2]) . ') ';
+                }
+                else{
+                    $this->query .= $value . ' ';
+                }
+                if ($i < $arrayWhereLength - 1) {
+                    $this->query .= ' OR ';
+                }
+            }
+        }
+        return $this;
+    }
     public function join($table, $on)
     {
-        $this->query = str_replace('FROM '.$this->table, 'FROM ', $this->query);
         if(str_contains($this->query, 'JOIN')){
             $this->query .= ' INNER JOIN ' . $table . ' ON ';
         }
         else{
             $this->query .= $this->table.' INNER JOIN ' . $table . ' ON ';
         }
+        $this->query = str_replace($this->table.$this->table, $this->table, $this->query);
         if(is_array($on)){
             if(array_is_list($on)){
                 $onLength = count($on);

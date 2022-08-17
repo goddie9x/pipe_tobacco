@@ -23,11 +23,11 @@
                     <?php foreach ($slides as $slide): ?>
                     <tr>
                         <td><?=$slide['slide_id'] ?></td>
-                        <td>
+                        <td class="image-lg">
                             <img class="w-100" src="<?= url('public/images/products/') . $slide['slide_image'] ?>" alt="">
                         </td>
                         <td><?=$slide['slide_name'] ?></td>
-                        <td><?=$slide['slide_status']==1?'Yes':'No' ?></td>
+                        <td><?=$slide['slide_status']==1?'Hiện':'Ẩn' ?></td>
                         <td>
                             <a href="<?=url('admin/slides/edit/'.$slide['slide_id']) ?>" class="btn btn-primary">Edit</a>
                             <a href="<?=url('admin/slides/delete/'.$slide['slide_id']) ?>" class="btn btn-danger">Delete</a>

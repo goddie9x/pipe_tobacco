@@ -52,7 +52,7 @@
                     </form>
                     <div class="col-4 images-setting">
                         <form action="<?= url('admin/settings/save') ?>" method="post" enctype="multipart/form-data">
-                            <div class="preview-logo">
+                            <div class="preview-logo image-lg">
                                 <img class="w-100" src="<?= url('public/images/' . @$site['site_logo']) ?>"
                                     alt="">
                             </div>
@@ -63,8 +63,8 @@
                             </div>
                             <button type="submit" name="submit-logo" class="btn btn-primary">Save</button>
                         </form>
-                        <form action="<?= url('admin/settings/save') ?>" method="post" enctype="multipart/form-data">
-                            <div class="preview-favicon">
+                        <form class="my-3" action="<?= url('admin/settings/save') ?>" method="post" enctype="multipart/form-data">
+                            <div class="preview-favicon image-xs">
                                 <img class="w-50" src="<?= url('public/images/' . @$site['site_favicon']) ?>"
                                     alt="">
                             </div>

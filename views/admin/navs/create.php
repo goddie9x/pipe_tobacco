@@ -18,7 +18,7 @@
             <select name="parent_id" id="parent_id" class="form-control">
                 <option value="">None</option>
                 <?php foreach ($navs as $crrNav): ?>
-                    <option value="<?= $crrNav['nav_id'] ?>" <?=@$crrNav['nav_id'] == @$nav['nav_id']?'selected':''?>><?= $crrNav['nav_name'] ?></option>
+                    <option value="<?= $crrNav['nav_id'] ?>" <?=@$crrNav['nav_id'] == @$nav['parent_id']?'selected':''?>><?= $crrNav['nav_name'] ?></option>
                 <?php endforeach; ?>
             </select>
         </div>

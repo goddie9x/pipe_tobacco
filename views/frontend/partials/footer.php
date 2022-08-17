@@ -64,5 +64,7 @@
 <script src="<?= @url('public/assets/js/popper.min.js') ?>"></script>
 <script src="<?= @url('public/assets/js/bootstrap.min.js') ?>"></script>
 <script src="<?= @url('public/assets/js/select2.min.js') ?>"></script>
+<script src="<?= @url('public/assets/js/toastGenerate.js') ?>"></script>
 <script src="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.js"></script>
 <script src="<?= @url('public/assets/js/index.js') ?>"></script>
+<?php include_once './views/errors/toasts.php'; ?>

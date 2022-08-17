@@ -109,6 +109,26 @@
         <li class="my-0">
             <button class="w-100 dropdown-toggle btn btn-secondary rounded-0 btn-lg  shadow p-3 d-block" data-bs-toggle="dropdown" aria-expanded="false">
                 <i class="fa fa-list"></i>
+                <span>News</span>
+            </button>
+            <ul class="dropdown-menu ">
+                <li class="dropdown-item">
+                    <a  class="w-100 d-block" href="<?=@url('admin/news'); ?>">
+                        <i class="fa fa-list"></i>
+                        <span>List</span>
+                    </a>
+                </li>
+                <li class="dropdown-item">
+                    <a  class="w-100 d-block" href="<?=@url('admin/news/create'); ?>">
+                        <i class="fa fa-plus"></i>
+                        <span>Add</span>
+                    </a>
+                </li>
+            </ul>
+        </li>
+        <li class="my-0">
+            <button class="w-100 dropdown-toggle btn btn-secondary rounded-0 btn-lg  shadow p-3 d-block" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="fa fa-list"></i>
                 <span>Orders</span>
             </button>
             <ul class="dropdown-menu">

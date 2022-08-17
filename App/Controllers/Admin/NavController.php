@@ -6,7 +6,7 @@ class NavController extends Controller
 {
     public function index()
     {
-        $navs = (new Nav())->getAllAndMergeChildrentNavs();
+        $navs = Nav::getAllAndMergeChildrentNavs();
         return view('admin.navs.list', compact('navs'));
     }
     public function create()

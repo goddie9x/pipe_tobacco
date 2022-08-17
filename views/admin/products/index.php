@@ -24,7 +24,7 @@
                     <?php foreach ($products as $product): ?>
                     <tr>
                         <td><?=$product['product_id'] ?></td>
-                        <td>
+                        <td class="image-sm">
                             <img class="w-100" src="<?= url('public/images/products/') . $product['product_image'] ?>" alt="">
                         </td>
                         <td><?=$product['product_name'] ?></td>

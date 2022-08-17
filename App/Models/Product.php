@@ -15,6 +15,16 @@ class Product extends Model
             ->offset(($page - 1) * $limit)
             ->get();
     }
+    public static function getProductHotByCategoryPathAndPage($category_path, $page=1, $limit = 8)
+    {
+        $category = Category::getCategoryByPath('categories/'.$category_path);
+        return self::select('*')
+            ->where(['hot' => 1, 'product_status' => 1, 'category_id' => $category['category_id']])
+            ->orderBy('product_id', 'DESC')
+            ->limit($limit)
+            ->offset(($page - 1) * $limit)
+            ->get();
+    }
     public static function getProductsByPage($page=1, $limit = 8)
     {
         return self::select('*')
@@ -35,10 +45,9 @@ class Product extends Model
     }
     public static function getProductsByCategoryPath($path, $page=1, $limit = 8)
     {
-        return self::select('products.*')
-            ->join('category', ['category.category_id', 'products.category_id'])
-            ->join('nav', ['nav.category_id', 'category.category_id'])
-            ->where(['nav.nav_path' => $path, 'product_status' => 1])
+        $category = Category::getCategoryByPath('categories/'.$path);
+        return self::select('*')
+            ->where(['category_id' => $category['category_id'], 'product_status' => 1])
             ->orderBy('product_id', 'DESC')
             ->limit($limit)
             ->offset(($page - 1) * $limit)
@@ -58,5 +67,11 @@ class Product extends Model
         return self::select('*')
             ->where(['product_path' => $path, 'product_status' => 1])
             ->first();
+    }
+    public static function getProductsByKeyword($keyword)
+    {
+        return self::select('*')
+            ->where([['product_name' ,'like', "%{$keyword}%"], ['product_status','=', 1]])
+            ->get();
     }
 }

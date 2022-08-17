@@ -21,7 +21,7 @@
                                     <tr>
                                         <td><?=$brand['brand_id']; ?></td>
                                         <td><?=$brand['brand_name']; ?></td>
-                                        <td><img src="<?=@url('public/images/products/'.$brand['brand_image']); ?>" alt="<?=$brand['brand_name']; ?>" width="100"></td>
+                                        <td class="image-sm"><img src="<?=@url('public/images/products/'.$brand['brand_image']); ?>" alt="<?=$brand['brand_name']; ?>" width="100"></td>
                                         <td><?=$brand['brand_status'] == 1 ? 'Active' : 'Inactive'; ?></td>
                                         <td>
                                             <a href="<?=@url('admin/brands/edit/'.$brand['brand_id']); ?>" class="btn btn-primary btn-sm">Edit</a>

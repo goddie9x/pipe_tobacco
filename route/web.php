@@ -111,6 +111,19 @@ Route::group(
         );
         $route->subGroup(
             [
+                'prefix' => 'news',
+            ],
+            function ($route) {
+                $route->get('/', 'NewsController@index')->name('news');
+                $route->get('/create', 'NewsController@create')->name('create_news');
+                $route->post('/store', 'NewsController@store')->name('store_news');
+                $route->get('/edit/{news_id}', 'NewsController@edit')->name('edit_news');
+                $route->post('/update/{news_id}', 'NewsController@update')->name('update_news');
+                $route->get('/delete/{news_id}', 'NewsController@delete')->name('delete_news');
+            },
+        );
+        $route->subGroup(
+            [
                 'prefix' => 'pages',
             ],
             function ($route) {
@@ -155,13 +168,12 @@ Route::group(
         $route->get('/', 'IndexController@index')->name('home');
         $route->subGroup(
             [
-                'prefix' => 'users',
+                'prefix' => 'account',
             ],
             function ($route) {
-                $route->get('/', 'UserController@index')->name('users');
-                $route->get('/edit/{id}', 'UserController@edit')->name('edit_user');
-                $route->post('/edit/{id}', 'UserController@edit')->name('edit_user');
-                $route->get('/delete/{id}', 'UserController@delete')->name('delete_user');
+                $route->get('/', 'IndexController@account')->name('home');
+                $route->get('/password', 'IndexController@password')->name('account_password');
+                $route->post('/update', 'IndexController@updateAccount')->name('account_update');
             },
         );
         $route->subGroup(
@@ -169,8 +181,8 @@ Route::group(
                 'prefix' => 'categories',
             ],
             function ($route) {
-                $route->get('/', 'CategoryController@index')->name('categories');
-                $route->get('/{categorie}', 'CategoryController@show')->name('show_category');
+                $route->get('/{category}', 'ProductController@category')->name('show_category');
+                $route->get('/', 'ProductController@index')->name('categories');
             },
         );
         $route->subGroup(
@@ -184,11 +196,11 @@ Route::group(
         );
         $route->subGroup(
             [
-                'prefix' => 'orders',
+                'prefix' => 'news',
             ],
             function ($route) {
-                $route->get('/', 'OrderController@index')->name('orders');
-                $route->get('/{id}', 'OrderController@show')->name('show_order');
+                $route->get('/', 'NewsController@index')->name('news');
+                $route->get('/{slug}', 'NewsController@detail')->name('show_news');
             },
         );
         $route->subGroup(
@@ -196,12 +208,12 @@ Route::group(
                 'prefix' => 'cart',
             ],
             function ($route) {
-                $route->get('/', 'CartController@index')->name('cart');
-                $route->get('/add/{id}', 'CartController@add')->name('add_to_cart');
-                $route->get('/delete/{id}', 'CartController@delete')->name('delete_from_cart');
-                $route->get('/checkout', 'CartController@checkout')->name('checkout');
+                $route->get('/', 'InvoiceController@index')->name('cart');
+                $route->post('/add', 'InvoiceController@addCart')->name('add_to_cart');
+                $route->get('/remove/{id}', 'InvoiceController@removeCart')->name('delete_from_cart');
             },
         );
+        $route->get('/search', 'IndexController@search')->name('search');
         $route->get('/{page}', 'PageController@index')->name('page');
     },
 );

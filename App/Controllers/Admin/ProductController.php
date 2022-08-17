@@ -25,6 +25,7 @@ class ProductController extends Controller
     {
         $product = new Product();
         $product->product_name = $request->product_name;
+        $product->discount = $request->discount;
         $product->brand_id = $request->brand_id;
         $product->category_id = $request->category_id;
         $product->product_path = str_slug($request->product_name);
@@ -94,6 +95,7 @@ class ProductController extends Controller
         if (count($product) > 0) {
             $dataUpdate = [
                 'product_name' => $request->product_name,
+                'discount' => $request->discount,
                 'brand_id' => $request->brand_id,
                 'category_id' => $request->category_id,
                 'product_path' => str_slug($request->product_name),
@@ -113,7 +115,7 @@ class ProductController extends Controller
                     if (file_exists('public/images/products/' . $file_name)) {
                         $file_name = date('Y-m-d-H-i-s') . '-' . $file_name;
                     }
-                    if($product['product_image'] != ''){
+                    if ($product['product_image'] != '') {
                         unlink('public/images/products/' . $product['product_image']);
                     }
                     move_uploaded_file($file_tmp, 'public/images/products/' . $file_name);
@@ -143,12 +145,16 @@ class ProductController extends Controller
                         writeLog($e);
                     }
                 }
-                if($product['product_image_slide'] != ''){
-                $listImage = explode(',', $product['product_image_slide']);
-                foreach ($listImage as $image) {
-                    unlink('public/images/products/' . $image);
+                if ($product['product_image_slide'] != '') {
+                    $listOldImage = explode(',', $product['product_image_slide']);
+                    try {
+                        foreach ($listOldImage as $image) {
+                            unlink('public/images/products/' . $image);
+                        }
+                    } catch (\Exception $e) {
+                        writeLog($e);
+                    }
                 }
-            }
                 $dataUpdate['product_image_slide'] = $listImage;
             }
             $idUpdated = (new Product())->where(['product_id' => $request->id])->update($dataUpdate);
@@ -157,8 +163,7 @@ class ProductController extends Controller
             } else {
                 return redirect()->back(['errors' => 'Cập nhật thất bại']);
             }
-        }
-        else{
+        } else {
             return redirect()->back(['errors' => 'Sản phẩm không tồn tại']);
         }
     }
@@ -166,14 +171,18 @@ class ProductController extends Controller
     {
         $product = Product::find($request->id);
         if (count($product) > 0) {
-            if($product['product_image'] != ''){
-                unlink('public/images/products/' . $product['product_image']);
-            }
-            if($product['product_image_slide'] != ''){
-                $listImage = explode(',', $product['product_image_slide']);
-                foreach ($listImage as $image) {
-                    unlink('public/images/products/' . $image);
+            try {
+                if ($product['product_image'] != '') {
+                    unlink('public/images/products/' . $product['product_image']);
                 }
+                if ($product['product_image_slide'] != '') {
+                    $listImage = explode(',', $product['product_image_slide']);
+                    foreach ($listImage as $image) {
+                        unlink('public/images/products/' . $image);
+                    }
+                }
+            } catch (\Exception $e) {
+                writeLog($e);
             }
             $idDeleted = Product::where(['product_id' => $request->id])->delete();
             if ($idDeleted) {
@@ -181,8 +190,7 @@ class ProductController extends Controller
             } else {
                 return redirect()->back(['errors' => 'Xóa sản phẩm thất bại']);
             }
-        }
-        else{
+        } else {
             return redirect()->back(['errors' => 'Sản phẩm không tồn tại']);
         }
     }

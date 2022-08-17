@@ -22,16 +22,16 @@
                         <?php foreach($categories as $category):?>
                             <tr>
                                 <td><?=@$category['category_id']?></td>
-                                <td><img class="w-100" src="<?=url('public/images/products/' . $category['category_image'])?>" alt="<?=@$category['category_name']?>"></td>
+                                <td class="image-lg"><img class="w-100" src="<?=url('public/images/products/' . $category['category_image'])?>" alt="<?=@$category['category_name']?>"></td>
                                 <td><?=@$category['category_name']?></td>
                                 <td><?=@$category['category_path']?></td>
                                 <td><?=isset($category['category_status']) && $category['category_status'] == 1 ? 'Active' : 'Inactive'?></td>
                                 <td>
-                                    <a href="<?=url('admin/categories/edit/' . $category['category_id'])?>" class="btn btn-primary btn-round">
+                                    <a href="<?=url('admin/categories/edit/' . $category['category_id'])?>" class="btn btn-primary btn-round my-2">
                                         <i class="fa fa-edit"></i>
                                         Edit
                                     </a>
-                                    <a href="<?=url('admin/categories/delete/' . $category['category_id'])?>" class="btn btn-danger btn-round">
+                                    <a href="<?=url('admin/categories/delete/' . $category['category_id'])?>" class="btn btn-danger btn-round my-2">
                                         <i class="fa fa-trash"></i>
                                         Delete
                                     </a>

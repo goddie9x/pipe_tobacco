@@ -18,7 +18,7 @@
         </div>
         <div class="col-4">
             <div class="preview-logo">
-                <img class="w-100"
+                <img class="w-100 image-lg"
                     src="<?= isset($brand) ? url('public/images/products/') . $brand['brand_image'] : '' ?>"
                     alt="">
             </div>

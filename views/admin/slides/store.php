@@ -53,7 +53,7 @@
                 value="<?= isset($slide) ? $slide['slide_name'] : '' ?>">
         </div>
         <?php if(isset($slide['slide_image'])) : ?>
-        <div class="preview-logo my-3">
+        <div class="preview-logo my-3 image-lg">
             <img class="w-100" src="<?= url('public/images/products/' . $slide['slide_image']) ?>"
                 alt="">
         </div>
