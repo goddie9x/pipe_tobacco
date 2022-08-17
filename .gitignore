@@ -1,3 +1,4 @@
 .htaccess
 .env
 /public/images/*
+/storage/tam.log
